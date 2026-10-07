@@ -1,5 +1,7 @@
 using PizzaApp.Api.Extensions;
 using PizzaApp.DataAccess;
+using PizzaApp.Services;
+using PizzaApp.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddDataAccess(builder.Configuration)
-    .AddJwtAuthentication();
+    .AddServices()
+    .AddJwtAuthentication()
+    .AddOpenApiDocumentation();
+// TODO : Create AddApi extension method
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -17,7 +22,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapApiDocs(); // /openapi/v1.json + Scalar UI at /scalar
 }
 
 app.UseHttpsRedirection();
