@@ -1,3 +1,4 @@
+using PizzaApp.Api.Extensions;
 using PizzaApp.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services
-    .AddDataAccess(builder.Configuration);
+    .AddDataAccess(builder.Configuration)
+    .AddJwtAuthentication();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -20,6 +22,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

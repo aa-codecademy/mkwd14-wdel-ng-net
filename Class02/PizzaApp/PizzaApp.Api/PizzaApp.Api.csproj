@@ -12,6 +12,7 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
@@ -25,6 +26,7 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\PizzaApp.DataAccess\PizzaApp.DataAccess.csproj" />
+    <ProjectReference Include="..\PizzaApp.Shared\PizzaApp.Shared.csproj" />
   </ItemGroup>
 
 </Project>
