@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mapster" />
+    <PackageReference Include="Mapster.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PizzaApp.Domain\PizzaApp.Domain.csproj" />
+    <ProjectReference Include="..\PizzaApp.Dtos\PizzaApp.Dtos.csproj" />
+  </ItemGroup>
+
 </Project>

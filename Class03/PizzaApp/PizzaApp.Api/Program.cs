@@ -1,5 +1,6 @@
 using PizzaApp.Api.Extensions;
 using PizzaApp.DataAccess;
+using PizzaApp.Mappers;
 using PizzaApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services
     .AddDataAccess(builder.Configuration)
+    .AddMappers()
     .AddServices()
     .AddApi();
 

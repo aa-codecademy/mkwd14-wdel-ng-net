@@ -5,6 +5,10 @@ using PizzaApp.Shared.Exceptions;
 
 namespace PizzaApp.Api.ExceptionHandling;
 
+/// <summary>
+/// The ONE place where exceptions become HTTP responses.
+/// Services simply throw (NotFoundException, ForbiddenException, ...); no try/catch anywhere else.
+/// </summary>
 public class GlobalExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(

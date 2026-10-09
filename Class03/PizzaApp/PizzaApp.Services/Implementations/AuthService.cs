@@ -1,3 +1,4 @@
+using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using PizzaApp.Domain.Constants;
 using PizzaApp.Domain.Entities;
@@ -13,13 +14,16 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<User> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IMapper _mapper;
 
     public AuthService(
         ITokenService tokenService,
-        UserManager<User> userManager)
+        UserManager<User> userManager,
+        IMapper mapper)
     {
         _tokenService = tokenService;
         _userManager = userManager;
+        _mapper = mapper;
     }
 
     public async Task<UserDto> RegisterAsync(RegisterRequestDto request)
@@ -39,13 +43,8 @@ public class AuthService : IAuthService
 
         await _userManager.AddToRoleAsync(user, Roles.Customer);
 
-        var userDto = new UserDto
-        {
-            Id = user.Id,
-            Email = user.Email,
-            UserName = user.UserName,
-            Roles = [Roles.Customer]
-        };
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Roles = [Roles.Customer];
 
         return userDto;
     }
