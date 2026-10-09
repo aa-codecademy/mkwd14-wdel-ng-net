@@ -10,7 +10,8 @@ public static class DependencyInjection
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
-
+        services.AddScoped<IPizzaService, PizzaService>();
+        
         return services;
     }
 }
