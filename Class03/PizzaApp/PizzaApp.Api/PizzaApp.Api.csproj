@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>4bd04beb-eff8-42af-88fb-df5fde4237b8</UserSecretsId>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Scalar.AspNetCore" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\PizzaApp.DataAccess\PizzaApp.DataAccess.csproj" />
+    <ProjectReference Include="..\PizzaApp.Dtos\PizzaApp.Dtos.csproj" />
+    <ProjectReference Include="..\PizzaApp.Services\PizzaApp.Services.csproj" />
+    <ProjectReference Include="..\PizzaApp.Shared\PizzaApp.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
