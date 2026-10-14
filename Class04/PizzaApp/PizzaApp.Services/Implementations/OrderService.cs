@@ -1,9 +1,11 @@
 using MapsterMapper;
 using PizzaApp.DataAccess.Repositories.Abstractions;
 using PizzaApp.Domain.Entities;
+using PizzaApp.Domain.Enums;
 using PizzaApp.Dtos.Orders;
 using PizzaApp.Services.Abstractions;
 using PizzaApp.Services.Extensions;
+using PizzaApp.Services.Rules.Order;
 using PizzaApp.Shared.Exceptions;
 
 namespace PizzaApp.Services.Implementations;
@@ -37,8 +39,7 @@ public class OrderService : IOrderService
 
     public async Task<OrderDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var order = await _orderRepository.GetByIdWithDetailsAsync(id, cancellationToken)
-            ?? throw new NotFoundException(nameof(Order), id);
+        var order = await FindOrderAsync(id, cancellationToken);
 
         _currentUser.EnsureOwnerOrAdmin(order.UserId);
 
@@ -65,8 +66,34 @@ public class OrderService : IOrderService
 
     public Task<OrderDto> UpdateAsync(int id, UpdateOrderDto request, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
-    public Task<OrderDto> ChangeStatusAsync(int id, ChangeOrderStatusDto request, CancellationToken cancellationToken = default) => throw new NotImplementedException();
+    public async Task<OrderDto> ChangeStatusAsync(
+        int id, ChangeOrderStatusDto request,
+        CancellationToken cancellationToken = default)
+    {
+        OrderStatus newStatus = request.Status ?? throw new BadRequestException("The new status is required.");
+
+        var order = await FindOrderAsync(id, cancellationToken);
+        _currentUser.EnsureOwnerOrAdmin(order.UserId);
+
+        // Current Status => order.Status
+        // New Status => request.Status
+
+        if (!OrderStatusRules.CanChange(order.Status, newStatus, _currentUser.IsAdmin))
+        {
+            throw new ConflictException($"An order can't go from {order.Status} to {newStatus}.");
+        }
+
+        order.Status = newStatus;
+        await _orderRepository.UpdateAsync(order, cancellationToken);
+
+        return _mapper.Map<OrderDto>(order);
+    }
 
     public Task DeleteAsync(int id, CancellationToken cancellationToken = default) => throw new NotImplementedException();
 
+    private async Task<Order> FindOrderAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await _orderRepository.GetByIdWithDetailsAsync(id, cancellationToken)
+            ?? throw new NotFoundException(nameof(Order), id);
+    }
 }

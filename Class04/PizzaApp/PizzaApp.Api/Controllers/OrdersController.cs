@@ -35,4 +35,13 @@ public class OrdersController : ApiControllerBase
         //return StatusCode(StatusCodes.Status201Created, order);
         return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
     }
+
+    [HttpPatch("{id:int}/status")]
+    public async Task<ActionResult<OrderDto>> ChangeStatus(
+        int id, ChangeOrderStatusDto request,
+        CancellationToken cancellationToken)
+    {
+        var order = await _orderService.ChangeStatusAsync(id, request, cancellationToken);
+        return Ok(order);
+    }
 }
