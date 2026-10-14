@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
     /// Creates a BadRequestObjectResult with a standardized error response for validation errors.
     /// It is needed because the default behavior of ASP.NET Core is to return a ProblemDetails response, which is not consistent with the rest of the API's error responses.
     /// </summary>
-    private static BadRequestObjectResult CreateValidationErrorResponse(ActionContext context) 
+    private static BadRequestObjectResult CreateValidationErrorResponse(ActionContext context)
     {
         var errors = context.ModelState.Values
             .SelectMany(entry => entry.Errors)

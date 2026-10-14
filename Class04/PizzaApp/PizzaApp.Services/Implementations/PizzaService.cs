@@ -35,7 +35,7 @@ public class PizzaService : IPizzaService
 
         return result;
     }
-    
+
     public async Task<PizzaDto> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var pizza = await FindPizzaAsync(id, cancellationToken);
