@@ -1,0 +1,167 @@
+# PizzaApp API: register, log in, and the saved pizzas.
+#
+# 1. Start the API with the "http" profile (http://localhost:5004) on a migrated database.
+# 2. Send the requests IN ORDER, top to bottom. A request marked "# @name" keeps its response,
+#    and later requests reuse the token or an id from it, e.g. {{customerLogin.response.body.$.token}}
+#
+# Visual Studio: click "Send request" above a request. VS Code: install the "REST Client" extension.
+# Every error has the same body: { "statusCode", "message", "errors", "traceId" }
+
+@baseUrl = http://localhost:5004/api
+
+
+### ─── 1. AUTH (anonymous) ───────────────────────────────────────────────
+# Register a customer → 201 + the new user, with the Customer role.
+# If "ana" already exists (you ran this file before) you get 400: skip it and log in.
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "userName": "ana",
+  "email": "ana@pizzaapp.local",
+  "password": "Ana123!"
+}
+
+### Log in as the customer → 200 + { token, expiresAt, userName, roles }
+# @name customerLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userName": "ana",
+  "password": "Ana123!"
+}
+
+### A second customer, for the 403 tests → 201 (or 400 if "bob" already exists)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "userName": "bob",
+  "email": "bob@pizzaapp.local",
+  "password": "Bob123!"
+}
+
+### Log in as the second customer → 200
+# @name bobLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userName": "bob",
+  "password": "Bob123!"
+}
+
+### Log in as the admin that the Init migration seeded → 200, roles: ["Admin"]
+# @name adminLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userName": "admin",
+  "password": "Admin123!"
+}
+
+### Wrong password → 401 with a generic message (it doesn't reveal whether "ana" exists)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userName": "ana",
+  "password": "not-my-password"
+}
+
+
+### ─── 2. SAVED PIZZAS ───────────────────────────────────────────────────
+# Create a pizza → 201 + a Location header + the pizza with its new id
+# @name createPizza
+POST {{baseUrl}}/pizzas
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "Margherita",
+  "description": "The classic",
+  "price": 7.50,
+  "ingredients": ["TomatoSauce", "Mozzarella", "Basil"]
+}
+
+### Invalid pizza → 400 with every validation error in "errors"
+POST {{baseUrl}}/pizzas
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": 0,
+  "ingredients": []
+}
+
+### An ingredient we don't have → 400 (enums travel as text, unknown names are rejected)
+POST {{baseUrl}}/pizzas
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "Hawaii",
+  "price": 9.00,
+  "ingredients": ["TomatoSauce", "Pineapple"]
+}
+
+### My saved pizzas → 200 (a customer sees only their own)
+GET {{baseUrl}}/pizzas
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### One pizza → 200
+GET {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### Update it → 200, with a new updatedDate
+PUT {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "Margherita",
+  "description": "The classic, with oregano",
+  "price": 8.00,
+  "ingredients": ["TomatoSauce", "Mozzarella", "Basil", "Oregano"]
+}
+
+### Somebody else's pizza → 403
+GET {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{bobLogin.response.body.$.token}}
+
+### Changing somebody else's pizza → 403
+PUT {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{bobLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "Mine now",
+  "price": 1.00,
+  "ingredients": ["TomatoSauce"]
+}
+
+### Deleting somebody else's pizza → 403
+DELETE {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{bobLogin.response.body.$.token}}
+
+### The admin may see anybody's pizza → 200
+GET {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+
+### The admin sees everybody's saved pizzas → 200
+GET {{baseUrl}}/pizzas
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+
+### Delete it → 204 (no body)
+DELETE {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### Get it again → 404 ("Pizza with id … was not found.")
+GET {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### No token → 401: every endpoint needs a login, except register, login and the API docs
+GET {{baseUrl}}/pizzas
