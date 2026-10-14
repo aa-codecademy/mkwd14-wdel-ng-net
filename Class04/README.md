@@ -165,25 +165,7 @@ An order moves only along the arrows. **Delivered** and **Cancelled** are final.
     ▼                     │
  Cancelled ◄──────────────┘
 ```
-The rule lives in **one** small class, with no database and no HTTP: a pure function that's easy to read and to test:
-```csharp
-public static bool CanChange(OrderStatus from, OrderStatus to, bool isAdmin)
-{
-    if (!isAdmin)
-    {
-        return from == OrderStatus.Pending && to == OrderStatus.Cancelled;
-    }
-
-    return (from, to) switch
-    {
-        (OrderStatus.Pending, OrderStatus.Preparing) => true,
-        (OrderStatus.Preparing, OrderStatus.Delivered) => true,
-        (OrderStatus.Pending or OrderStatus.Preparing, OrderStatus.Cancelled) => true,
-        _ => false,   // everything else is refused
-    };
-}
-```
-🧩 A `switch` on a **tuple**: one line per allowed move, and `or` joins two values in one pattern.
+The rule lives in **one** small class, with no database and no HTTP: a pure function that's easy to read and to test
 
 `ChangeStatusAsync` follows the CRUD steps: **find** (404) → **owner or admin** (403) → **the rule** (409) → change → save → map.
 
