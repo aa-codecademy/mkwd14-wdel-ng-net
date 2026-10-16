@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="PizzaApp.Api/PizzaApp.Api.csproj" />
+  <Project Path="PizzaApp.DataAccess/PizzaApp.DataAccess.csproj" />
+  <Project Path="PizzaApp.Domain/PizzaApp.Domain.csproj" />
+  <Project Path="PizzaApp.Dtos/PizzaApp.Dtos.csproj" />
+  <Project Path="PizzaApp.Mappers/PizzaApp.Mappers.csproj" />
+  <Project Path="PizzaApp.Services/PizzaApp.Services.csproj" />
+  <Project Path="PizzaApp.Shared/PizzaApp.Shared.csproj" />
+</Solution>
