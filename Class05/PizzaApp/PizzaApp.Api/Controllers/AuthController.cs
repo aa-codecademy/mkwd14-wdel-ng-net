@@ -24,8 +24,10 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpPost("login")]
-    // admin@pizzaapp.local
+    // admin
     // Admin123!
+    // bob
+    // Bob123!
     public async Task<ActionResult<LoginResponseDto>> Login(LoginRequestDto request, CancellationToken cancellationToken)
     {
         var response = await _authService.LoginAsync(request);
