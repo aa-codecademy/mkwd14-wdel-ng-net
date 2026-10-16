@@ -1,5 +1,6 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PizzaApp.Domain.Entities;
 using PizzaApp.Dtos.Users;
 using PizzaApp.Services.Abstractions;
@@ -22,6 +23,8 @@ public class UserService : IUserService
         _userManager = userManager;
         _mapper = mapper;
     }
+
+    #region Logged in user
 
     public async Task<UserDto> GetCurrentUserAsync()
     {
@@ -59,6 +62,39 @@ public class UserService : IUserService
         var result = await _userManager.DeleteAsync(user);
         ThrowIfFailed(result, "Deleting the user failed.");
     }
+
+    #endregion
+
+    #region Admin only
+
+    public async Task<List<UserDto>> GetAllAsync()
+    {
+        var users = await _userManager.Users
+            .AsNoTracking()
+            .OrderBy(user => user.UserName)
+            .ToListAsync();
+
+        var userDtos = new List<UserDto>();
+        foreach (var user in users)
+        {
+            // Should be optimized in the future if the number of users increases
+            userDtos.Add(await ToUserDtoAsync(user));
+        }
+
+        return userDtos;
+    }
+
+    public async Task<UserDto> GetByIdAsync(string id)
+    {
+        var user = await FindUserAsync(id);
+        return await ToUserDtoAsync(user);
+    }
+
+    public Task<UserDto> SetRoleAsync(string id, string role) => throw new NotImplementedException();
+
+    public Task DeleteAsync(string id) => throw new NotImplementedException();
+
+    #endregion
 
     #region Private Helpers
 

@@ -10,7 +10,9 @@ namespace PizzaApp.Api.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApi(this IServiceCollection services)
+    public static IServiceCollection AddApi(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddControllers()
             .AddJsonOptions(options =>
@@ -37,6 +39,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICurrentUser, CurrentUser>();
 
         services.AddJwtAuthentication();
+
+        services.AddFrontendCors(configuration);
 
         return services;
     }

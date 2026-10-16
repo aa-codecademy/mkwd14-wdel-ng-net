@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PizzaApp.Domain.Constants;
 using PizzaApp.Dtos.Users;
 using PizzaApp.Services.Abstractions;
 
@@ -41,4 +43,21 @@ public class UsersController : ApiControllerBase
         return NoContent();
     }
 
+    [HttpGet]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<ActionResult<List<UserDto>>> GetAll()
+    {
+        bool isAdmin = User.IsInRole(Roles.Admin);
+
+        var users = await _userService.GetAllAsync();
+        return Ok(users);
+    }
+
+    [HttpGet("{id}")]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<ActionResult<UserDto>> GetById(string id)
+    {
+        var user = await _userService.GetByIdAsync(id);
+        return Ok(user);
+    }
 }
