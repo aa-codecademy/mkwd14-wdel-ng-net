@@ -1,0 +1,24 @@
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    img {
+        width: min(100%, 420px);
+        height: auto;
+    }
+}
+
+h1 {
+    margin: 32px 0 16px;
+    font: var(--mat-sys-headline-small);
+    text-align: center;
+}
+
+// As many columns as fit, each at least 16rem wide: no JavaScript needed
+.menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 16px;
+}
