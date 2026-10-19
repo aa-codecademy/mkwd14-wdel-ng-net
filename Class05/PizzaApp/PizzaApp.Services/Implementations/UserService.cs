@@ -90,9 +90,30 @@ public class UserService : IUserService
         return await ToUserDtoAsync(user);
     }
 
-    public Task<UserDto> SetRoleAsync(string id, string role) => throw new NotImplementedException();
+    public async Task<UserDto> SetRoleAsync(string id, string role)
+    {
+        var user = await FindUserAsync(id);
 
-    public Task DeleteAsync(string id) => throw new NotImplementedException();
+        // A user has exactly one role in this app: replace the old one
+        var currentRoles = await _userManager.GetRolesAsync(user);
+
+        var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+        ThrowIfFailed(removeResult, "Removing the old role failed.");
+
+        var addResult = await _userManager.AddToRoleAsync(user, role);
+        ThrowIfFailed(addResult, "Setting the role failed.");
+
+        return await ToUserDtoAsync(user);
+    }
+
+    public async Task DeleteAsync(string id)
+    {
+        var user = await FindUserAsync(id);
+
+        // The database deletes the user's orders and pizzas too (cascade delete)
+        var result = await _userManager.DeleteAsync(user);
+        ThrowIfFailed(result, "Deleting the user failed.");
+    }
 
     #endregion
 

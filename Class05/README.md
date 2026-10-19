@@ -20,7 +20,7 @@ The last backend class. Every user manages **their own profile**, and the admin 
 **🔍 Looking back**
 
 5. 🧪 The full `.http` scenario, from register to admin
-6. 🧱 Code review: SOLID, DRY and KISS in our code, and `Program.cs` as the composition root
+6. 🧱 Code review: SOLID, DRY and KISS in our code, `Program.cs` as the composition root, and `Directory.Build.props` for the settings every project shares
 
 **🅰️ Ready for Angular**
 
@@ -164,6 +164,35 @@ Then the middleware, where the **order** matters: errors first, then CORS, then 
 UseExceptionHandler → UseCors → UseAuthentication → UseAuthorization → MapControllers
 ```
 
+### 🧰 Directory.Build.props: shared settings, written once
+MSBuild imports this file into **every project** in its folder and sub-folders, so the seven `.csproj` files stop repeating the same `PropertyGroup`. `Directory.Packages.props` says **which versions**, `Directory.Build.props` says **which settings**:
+```xml
+<PropertyGroup>
+  <TargetFramework>net10.0</TargetFramework>
+  <Nullable>enable</Nullable>
+  <ImplicitUsings>enable</ImplicitUsings>
+
+  <AnalysisLevel>latest-recommended</AnalysisLevel>
+  <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  <NoWarn>$(NoWarn);CS1591</NoWarn>
+
+  <NuGetAudit>true</NuGetAudit>
+  <NuGetAuditMode>all</NuGetAuditMode>
+</PropertyGroup>
+
+<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+</PropertyGroup>
+```
+- 🎯 **The same .NET version and C# features** for every project. A `.csproj` keeps only what is its own: packages, project references, the Api's `UserSecretsId`.
+- 🔍 **`AnalysisLevel` + `EnforceCodeStyleInBuild`:** Microsoft's recommended rules and our `.editorconfig` rules run on **every build**, not only in the editor. On the first build it found an unused `using` in `Program.cs`.
+- 📝 **`GenerateDocumentationFile`:** without it the build doesn't report unused usings (IDE0005). `CS1591` ("missing XML comment") is switched off: comments are welcome, not required.
+- 🛡️ **`NuGetAudit`:** warns about NuGet packages with known security vulnerabilities, also the ones that come in through another package.
+- 🚦 **Release is strict:** every warning fails the build. Debug only shows them, so nobody is blocked while coding.
+- 📂 MSBuild finds the file by its name and folder. Add it to **Solution Items** in the `.slnx` anyway, next to `.editorconfig` and `Directory.Packages.props`, so it shows up in Solution Explorer.
+
 ---
 
 ### 🌍 CORS: who may call the API from a browser
@@ -246,7 +275,7 @@ Check yourself with the last section of the `.http` file: every request must ret
 - 🎟️ a new role counts from the user's next login
 - 🌍 a request from `http://localhost:4200` gets the `Access-Control-Allow-Origin` header back
 - 📄 the `.http` file returns the status code in every comment, up to the homework section
-- 🧱 the solution builds with 0 warnings
+- 🧱 the solution builds with 0 warnings, in Release too (`dotnet build -c Release`)
 
 ---
 

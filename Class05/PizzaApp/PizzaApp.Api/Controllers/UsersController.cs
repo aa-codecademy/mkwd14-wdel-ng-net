@@ -29,7 +29,7 @@ public class UsersController : ApiControllerBase
         return Ok(user);
     }
 
-    [HttpPatch("me/password")]
+    [HttpPut("me/password")]
     public async Task<IActionResult> ChangeMyPassword(ChangePasswordDto request)
     {
         await _userService.ChangeCurrentUserPasswordAsync(request);
@@ -59,5 +59,21 @@ public class UsersController : ApiControllerBase
     {
         var user = await _userService.GetByIdAsync(id);
         return Ok(user);
+    }
+
+    [HttpPut("{id}/role")]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<ActionResult<UserDto>> SetRole(string id, SetUserRoleDto request)
+    {
+        var user = await _userService.SetRoleAsync(id, request.Role);
+        return Ok(user);
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<IActionResult> Delete(string id)
+    {
+        await _userService.DeleteAsync(id);
+        return NoContent();
     }
 }

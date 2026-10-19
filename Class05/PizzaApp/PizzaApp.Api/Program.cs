@@ -1,4 +1,3 @@
-using PizzaApp.Api.Controllers;
 using PizzaApp.Api.Extensions;
 using PizzaApp.DataAccess;
 using PizzaApp.Mappers;
