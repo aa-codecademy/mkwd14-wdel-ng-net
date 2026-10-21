@@ -1,0 +1,33 @@
+.toolbar {
+    flex-wrap: wrap;
+    gap: 4px;
+    height: auto;
+    min-height: 64px;
+    padding: 8px 16px;
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 16px;
+    color: inherit;
+    font: var(--mat-sys-title-large);
+    text-decoration: none;
+}
+
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.active {
+    background: var(--mat-sys-secondary-container);
+}
