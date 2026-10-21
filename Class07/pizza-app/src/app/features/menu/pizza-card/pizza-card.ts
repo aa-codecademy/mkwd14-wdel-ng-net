@@ -1,8 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { MenuPizza } from '../menu-data';
-import { MatCard, MatCardHeader, MatCardTitle, MatCardContent } from '@angular/material/card';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
 import { MatChipSet, MatChip } from '@angular/material/chips';
 import { NgOptimizedImage } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   imports: [
@@ -12,7 +13,9 @@ import { NgOptimizedImage } from '@angular/common';
     MatCardContent,
     MatChipSet,
     MatChip,
-    NgOptimizedImage
+    NgOptimizedImage,
+    MatCardActions,
+    MatButton
   ],
   selector: 'app-pizza-card',
   styleUrl: './pizza-card.scss',
@@ -21,4 +24,5 @@ import { NgOptimizedImage } from '@angular/common';
 export class PizzaCard {
   // @Input({ required: true }) pizza: MenuPizza = null!;
   readonly pizza = input.required<MenuPizza>();
+  readonly choose = output<MenuPizza>();
 }

@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { MENU } from '../menu-data';
+import { Component, inject } from '@angular/core';
+import { MENU, MenuPizza } from '../menu-data';
 import { NgOptimizedImage } from '@angular/common';
 import { PizzaCard } from '../pizza-card/pizza-card';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   imports: [
     NgOptimizedImage,
     PizzaCard,
-    RouterLink,
-    MatButtonModule
+    MatButtonModule,
+    RouterLink
   ],
   selector: 'app-home',
   styleUrl: './home.scss',
@@ -18,4 +18,15 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class Home {
   protected readonly menu = MENU;
+  protected readonly router = inject(Router);
+
+  // constructor(private router: Router) {
+
+  // }
+
+  protected makePizza(selectedPizza: MenuPizza): void {
+    console.log(selectedPizza);
+    // /pizza-maker?pizza=<selectedPizza.id>
+    this.router.navigate(['/pizza-maker'], { queryParams: { pizza: selectedPizza.id } })
+  }
 }

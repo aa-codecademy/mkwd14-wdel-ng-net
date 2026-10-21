@@ -1,0 +1,11 @@
+<mat-selection-list
+    aria-label="Ingredients"
+    (selectionChange)="onSelectionChange($event)">
+    @for (item of ingredients; track item) {
+    <mat-list-option
+        [value]="item"
+        [selected]="selectedIngredients().includes(item)">
+        {{item}}
+    </mat-list-option>
+    }
+</mat-selection-list>

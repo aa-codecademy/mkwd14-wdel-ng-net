@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="card">
     <img
         mat-card-image
         [ngSrc]="pizza().image"
@@ -19,4 +19,12 @@
         </mat-chip-set>
     </mat-card-content>
 
+    <mat-card-actions align="end">
+        <button
+            (click)="choose.emit(pizza())"
+            matButton="filled"
+            type="button">
+            Make it
+        </button>
+    </mat-card-actions>
 </mat-card>

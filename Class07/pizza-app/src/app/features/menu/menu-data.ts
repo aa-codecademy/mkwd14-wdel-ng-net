@@ -102,3 +102,7 @@ export const MENU: MenuPizza[] = [
         ingredients: ['TomatoSauce', 'Mozzarella', 'Olives', 'Mushrooms'],
     },
 ];
+
+export function findMenuPizza(id: string | undefined): MenuPizza | undefined {
+    return MENU.find(pizza => pizza.id === id);
+}
