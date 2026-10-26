@@ -32,5 +32,15 @@
         <mat-icon>shopping_cart</mat-icon>
     </a>
 
-    <button matButton type="button" (click)="loginAsAdmin()">Log in as admin</button>
+    @if (authService.isLoggedIn()) {
+    <span class="user">
+        <mat-icon>person</mat-icon>
+        {{ authService.userName() }}
+    </span>
+    <button matButton type="button" (click)="logout()">Log out</button>
+    } @else {
+    <button matButton type="button" (click)="loginAsAdmin()">
+        Log in as admin
+    </button>
+    }
 </mat-toolbar>

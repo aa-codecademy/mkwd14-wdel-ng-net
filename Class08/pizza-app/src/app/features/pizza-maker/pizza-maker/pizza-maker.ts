@@ -1,4 +1,5 @@
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { PIZZA_SIZES, PizzaSize } from '../../../shared/models/pizza-size';
 import { Ingredient } from '../../../shared/models/pizza-models';
 import { calculatePizzaPrice } from '../pizza-price';
@@ -27,7 +28,8 @@ const DEFAULT_NAME = 'Custom pizza';
     MatInputModule,
     IngredientPicker,
     HotPizza,
-    IngredientNamePipe
+    IngredientNamePipe,
+    CurrencyPipe
   ],
   selector: 'app-pizza-maker',
   styleUrl: './pizza-maker.scss',
@@ -37,10 +39,6 @@ export class PizzaMaker implements OnInit {
 
   readonly pizza = input<string>();
   private readonly cartService = inject(CartService);
-
-  constructor() {
-
-  }
 
   protected readonly sizes = PIZZA_SIZES;
   protected readonly name = signal(DEFAULT_NAME);
@@ -80,6 +78,11 @@ export class PizzaMaker implements OnInit {
 
   protected addToCart(): void {
     this.cartService.add(this.currentPizza());
+  }
+
+  protected addAndMakeAnother(): void {
+    this.cartService.add(this.currentPizza());
+    this.reset();
   }
 
   private currentPizza(): Omit<CartItem, 'id'> {

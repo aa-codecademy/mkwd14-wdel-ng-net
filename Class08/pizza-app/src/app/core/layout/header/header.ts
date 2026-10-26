@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../services/cart-service';
 import { AuthService } from '../../services/auth-service';
@@ -23,11 +23,15 @@ import { AuthService } from '../../services/auth-service';
 })
 export class Header {
   protected readonly cartService = inject(CartService);
-  private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
 
   protected loginAsAdmin(): void {
     this.authService
       .login({ userName: 'admin', password: 'Admin123!' })
       .subscribe(loggedInUser => console.log(loggedInUser));
+  }
+
+  protected logout(): void {
+    this.authService.logout();
   }
 }

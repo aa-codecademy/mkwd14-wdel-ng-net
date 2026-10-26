@@ -36,6 +36,14 @@ export class CartService {
     add(pizza: Omit<CartItem, 'id'>): void {
         this.itemsState.update(items => [...items, { ...pizza, id: crypto.randomUUID() }])
     }
+
+    remove(id: string): void {
+        this.itemsState.update(items => items.filter(item => item.id !== id));
+    }
+
+    clear(): void {
+        this.itemsState.set([]);
+    }
 }
 
 function readSavedCart(): CartItem[] {

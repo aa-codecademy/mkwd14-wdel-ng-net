@@ -26,6 +26,7 @@
 </ul>
 
 <div class="total">
+    <button matButton type="button" (click)="cartService.clear()">Empty cart</button>
     <span>Total: <strong>{{ cartService.total() | currency: 'EUR' }}</strong></span>
 </div>
 }

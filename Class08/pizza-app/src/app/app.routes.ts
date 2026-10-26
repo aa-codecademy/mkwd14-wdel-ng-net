@@ -7,6 +7,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/menu/home/home').then(m => m.Home)
     },
     {
+        path: 'login',
+        title: 'Log in - Pizza App',
+        loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
+    },
+    {
         path: 'pizza-maker',
         title: 'Make a pizza - Pizza App',
         loadComponent: () => import('./features/pizza-maker/pizza-maker/pizza-maker').then(m => m.PizzaMaker)
