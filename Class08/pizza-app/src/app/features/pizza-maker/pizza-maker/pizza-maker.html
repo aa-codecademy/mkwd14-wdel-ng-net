@@ -1,0 +1,51 @@
+<h1>Make your pizza</h1>
+
+<div class="maker">
+    <section>
+        <h2>1. Pick the ingredients</h2>
+        <app-ingredient-picker [(selectedIngredients)]="ingredients" />
+    </section>
+
+    <section class="summary">
+        <h2>2. Name it and pick a size</h2>
+        <mat-form-field>
+            <mat-label>Pizza name</mat-label>
+            <input
+                (input)="onNameInput($event)"
+                [value]="name()"
+                matInput
+                maxlength="100"
+                required />
+        </mat-form-field>
+
+        <mat-button-toggle-group
+            class="sizes"
+            aria-label="Pizza size"
+            hideSingleSelectionIndicator
+            [value]="size()"
+            (change)="size.set($event.value)">
+            @for (sizeOption of sizes; track sizeOption) {
+            <mat-button-toggle [value]="sizeOption">
+                {{ sizeOption }}
+            </mat-button-toggle>
+            }
+        </mat-button-toggle-group>
+
+        <h2>3. Your pizza</h2>
+        @if (ingredients().length) {
+        <mat-chip-set aria-label="Selected ingredients">
+            @for (item of ingredients(); track item) {
+            <mat-chip>{{ item }}</mat-chip>
+            }
+        </mat-chip-set>
+        } @else {
+        <p>Pick at least one ingredient.</p>
+        }
+
+        <p class="price">{{ price() }} &euro;</p>
+
+        <div class="actions">
+            <button matButton type="button" (click)="reset()">Start over</button>
+        </div>
+    </section>
+</div>

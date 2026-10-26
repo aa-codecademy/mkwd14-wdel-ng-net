@@ -1,0 +1,30 @@
+<mat-card class="card">
+    <img
+        mat-card-image
+        [ngSrc]="pizza().image"
+        [width]="pizza().imageWidth"
+        [height]="pizza().imageHeight"
+        [alt]="pizza().name" />
+
+    <mat-card-header>
+        <mat-card-title>{{ pizza().name }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+        <p>{{ pizza().description }}</p>
+        <mat-chip-set aria-label="Ingredients">
+            @for (ingredient of pizza().ingredients; track ingredient) {
+            <mat-chip>{{ ingredient }}</mat-chip>
+            }
+        </mat-chip-set>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+        <button
+            (click)="choose.emit(pizza())"
+            matButton="filled"
+            type="button">
+            Make it
+        </button>
+    </mat-card-actions>
+</mat-card>

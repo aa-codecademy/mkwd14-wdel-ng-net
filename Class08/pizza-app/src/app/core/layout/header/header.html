@@ -1,0 +1,22 @@
+<mat-toolbar class="toolbar">
+    <a class="brand" routerLink="/">
+        <mat-icon>local_pizza</mat-icon>
+        Pizza App
+    </a>
+
+    <nav class="links">
+        <a
+            matButton
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}">
+            Menu
+        </a>
+        <a
+            matButton
+            routerLink="/pizza-maker"
+            routerLinkActive="active">
+            Make a pizza
+        </a>
+    </nav>
+</mat-toolbar>
