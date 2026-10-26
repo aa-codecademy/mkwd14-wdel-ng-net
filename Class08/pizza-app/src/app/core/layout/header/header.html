@@ -19,4 +19,17 @@
             Make a pizza
         </a>
     </nav>
+
+    <span class="spacer"></span>
+
+    <a
+        matIconButton
+        routerLink="/checkout"
+        aria-label="Cart"
+        [matBadge]="cartService.count()"
+        [matBadgeHidden]="cartService.count() === 0"
+        matBadgeDescription="pizzas in the cart">
+        <mat-icon>shopping_cart</mat-icon>
+    </a>
+
 </mat-toolbar>

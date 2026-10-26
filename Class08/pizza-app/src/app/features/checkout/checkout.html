@@ -1,0 +1,31 @@
+<h1>Your cart</h1>
+
+@if (cartService.count() === 0) {
+<p>Your cart is empty. <a routerLink="/pizza-maker">Make a pizza</a>.</p>
+} @else {
+<ul class="cart">
+    @for (item of cartService.items(); track item.id) {
+    <li>
+        <div>
+            <strong>{{ item.name | uppercase }}</strong>
+            @if (item.size) {
+            <span class="size">{{ item.size }}</span>
+            }
+            <div class="ingredients">{{ item.ingredients | ingredientName }}</div>
+        </div>
+        <span class="price">{{ item.price | currency: 'EUR' }}</span>
+        <button
+            matIconButton
+            type="button"
+            [attr.aria-label]="'Remove ' + item.name"
+            (click)="cartService.remove(item.id)">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </li>
+    }
+</ul>
+
+<div class="total">
+    <span>Total: <strong>{{ cartService.total() | currency: 'EUR' }}</strong></span>
+</div>
+}

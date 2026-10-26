@@ -1,4 +1,4 @@
-import { Component, computed, input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { PIZZA_SIZES, PizzaSize } from '../../../shared/models/pizza-size';
 import { Ingredient } from '../../../shared/models/pizza-models';
 import { calculatePizzaPrice } from '../pizza-price';
@@ -9,6 +9,7 @@ import { MatChipSet, MatChip } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { IngredientPicker } from '../ingredient-picker/ingredient-picker';
 import { findMenuPizza } from '../../menu/menu-data';
+import { CartItem, CartService } from '../../../core/services/cart-service';
 
 const DEFAULT_NAME = 'Custom pizza';
 
@@ -31,6 +32,11 @@ const DEFAULT_NAME = 'Custom pizza';
 export class PizzaMaker implements OnInit {
 
   readonly pizza = input<string>();
+  private readonly cartService = inject(CartService);
+
+  constructor() {
+
+  }
 
   protected readonly sizes = PIZZA_SIZES;
   protected readonly name = signal(DEFAULT_NAME);
@@ -66,4 +72,19 @@ export class PizzaMaker implements OnInit {
     this.ingredients.set([]);
   }
 
+  protected readonly isValid = computed(() => this.ingredients().length && this.name().trim().length)
+
+  protected addToCart(): void {
+    this.cartService.add(this.currentPizza());
+  }
+
+  private currentPizza(): Omit<CartItem, 'id'> {
+    return {
+      name: this.name().trim(),
+      description: `${this.size()} pizza`,
+      price: this.price(),
+      ingredients: this.ingredients(),
+      size: this.size()
+    }
+  }
 }
