@@ -5,6 +5,7 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../services/cart-service';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   imports: [
@@ -19,9 +20,14 @@ import { CartService } from '../../services/cart-service';
   selector: 'app-header',
   styleUrl: './header.scss',
   templateUrl: './header.html'
-  // standalone: true,
 })
 export class Header {
   protected readonly cartService = inject(CartService);
+  private readonly authService = inject(AuthService);
+
+  protected loginAsAdmin(): void {
+    this.authService
+      .login({ userName: 'admin', password: 'Admin123!' })
+      .subscribe(loggedInUser => console.log(loggedInUser));
+  }
 }
-// <app-header></app-header>

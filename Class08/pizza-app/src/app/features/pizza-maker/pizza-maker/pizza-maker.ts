@@ -10,6 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { IngredientPicker } from '../ingredient-picker/ingredient-picker';
 import { findMenuPizza } from '../../menu/menu-data';
 import { CartItem, CartService } from '../../../core/services/cart-service';
+import { HotPizza } from '../../../shared/directives/hot-pizza';
+import { IngredientNamePipe } from '../../../shared/pipes/ingredient-name-pipe';
 
 const DEFAULT_NAME = 'Custom pizza';
 
@@ -23,7 +25,9 @@ const DEFAULT_NAME = 'Custom pizza';
     MatChip,
     MatFormFieldModule,
     MatInputModule,
-    IngredientPicker
+    IngredientPicker,
+    HotPizza,
+    IngredientNamePipe
   ],
   selector: 'app-pizza-maker',
   styleUrl: './pizza-maker.scss',

@@ -1,9 +1,10 @@
 import { Component, model, signal } from '@angular/core';
 import { Ingredient, INGREDIENTS } from '../../../shared/models/pizza-models';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
+import { IngredientNamePipe } from '../../../shared/pipes/ingredient-name-pipe';
 
 @Component({
-  imports: [MatListModule],
+  imports: [MatListModule, IngredientNamePipe],
   selector: 'app-ingredient-picker',
   styleUrl: './ingredient-picker.scss',
   templateUrl: './ingredient-picker.html',

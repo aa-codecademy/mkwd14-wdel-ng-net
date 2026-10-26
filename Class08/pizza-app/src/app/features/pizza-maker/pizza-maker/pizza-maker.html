@@ -6,7 +6,7 @@
         <app-ingredient-picker [(selectedIngredients)]="ingredients" />
     </section>
 
-    <section class="summary">
+    <section class="summary" [appHotPizza]="ingredients()">
         <h2>2. Name it and pick a size</h2>
         <mat-form-field>
             <mat-label>Pizza name</mat-label>
@@ -35,7 +35,7 @@
         @if (ingredients().length) {
         <mat-chip-set aria-label="Selected ingredients">
             @for (item of ingredients(); track item) {
-            <mat-chip>{{ item }}</mat-chip>
+            <mat-chip>{{ item | ingredientName }}</mat-chip>
             }
         </mat-chip-set>
         } @else {

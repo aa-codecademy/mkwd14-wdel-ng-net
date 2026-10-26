@@ -5,7 +5,7 @@
     <mat-list-option
         [value]="item"
         [selected]="selectedIngredients().includes(item)">
-        {{item}}
+        {{ item | ingredientName }}
     </mat-list-option>
     }
 </mat-selection-list>

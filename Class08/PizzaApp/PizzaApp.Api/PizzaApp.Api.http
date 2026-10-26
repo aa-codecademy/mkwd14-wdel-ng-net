@@ -1,0 +1,297 @@
+# PizzaApp API: the whole flow, from register to admin.
+
+# Visual Studio: click "Send request" above a request. VS Code: install the "REST Client" extension.
+# Every error has the same body: { "statusCode", "message", "errors", "traceId" }
+
+@baseUrl = http://localhost:5004/api
+
+
+### ─── 1. AUTH (anonymous) ───────────────────────────────────────────────
+# Register a customer → 201 + the new user, with the Customer role.
+# If "ana" already exists (you stopped halfway last time) you get 400: skip it and log in.
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "userName": "ana",
+  "email": "ana@pizzaapp.local",
+  "password": "Ana123!"
+}
+
+### Log in as the customer → 200 + { token, expiresAt, userName, roles }
+# @name customerLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userName": "ana",
+  "password": "Ana123!"
+}
+
+### Log in as the admin that the InitialCreate migration seeded → 200, roles: ["Admin"]
+# @name adminLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userName": "admin",
+  "password": "Admin123!"
+}
+
+### Wrong password → 401 with a generic message (it doesn't reveal whether "ana" exists)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userName": "ana",
+  "password": "not-my-password"
+}
+
+
+### ─── 2. MY PROFILE ─────────────────────────────────────────────────────
+# Who am I? → 200 + id, userName, email, roles (never the password hash)
+# @name me
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### Change my email → 200
+PUT {{baseUrl}}/users/me
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "userName": "ana",
+  "email": "ana.new@pizzaapp.local"
+}
+
+### No token → 401: every endpoint needs a login, except register, login and the API docs
+GET {{baseUrl}}/users/me
+
+
+### ─── 3. SAVED PIZZAS (as the customer) ─────────────────────────────────
+# Create a pizza → 201 + a Location header + the pizza with its new id
+# @name createPizza
+POST {{baseUrl}}/pizzas
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "Margherita",
+  "description": "The classic",
+  "price": 7.50,
+  "ingredients": ["TomatoSauce", "Mozzarella", "Basil"]
+}
+
+### Invalid pizza → 400 with every validation error in "errors"
+POST {{baseUrl}}/pizzas
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": 0,
+  "ingredients": []
+}
+
+### My saved pizzas → 200 (a customer sees only their own, the admin sees everyone's)
+GET {{baseUrl}}/pizzas
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### One pizza → 200
+GET {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### Update it → 200, with a new updatedDate
+PUT {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "Margherita",
+  "description": "The classic, with oregano",
+  "price": 8.00,
+  "ingredients": ["TomatoSauce", "Mozzarella", "Basil", "Oregano"]
+}
+
+### Delete it → 204 (no body)
+DELETE {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### Get it again → 404 ("Pizza with id … was not found.")
+GET {{baseUrl}}/pizzas/{{createPizza.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+
+### ─── 4. ORDERS (as the customer) ───────────────────────────────────────
+# Place an order → 201. The server computes totalPrice (7.50 + 9.00 = 16.50) and sets the status to Pending.
+# @name createOrder
+POST {{baseUrl}}/orders
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "addressTo": "Main Street 10",
+  "description": "Ring twice",
+  "pizzas": [
+    { "name": "Margherita", "price": 7.50, "ingredients": ["TomatoSauce", "Mozzarella", "Basil"] },
+    { "name": "Pepperoni", "price": 9.00, "ingredients": ["TomatoSauce", "Mozzarella", "Pepperoni"] }
+  ]
+}
+
+### My orders → 200, each with its pizzas (a customer sees only their own)
+GET {{baseUrl}}/orders
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### One order → 200
+GET {{baseUrl}}/orders/{{createOrder.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+### Change the address → 200 (allowed only while the order is Pending)
+PUT {{baseUrl}}/orders/{{createOrder.response.body.$.id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "addressTo": "Main Street 12",
+  "description": "Ring twice, 2nd floor"
+}
+
+### A pizza inside an order is read-only → 409
+PUT {{baseUrl}}/pizzas/{{createOrder.response.body.$.pizzas[0].id}}
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "name": "Margherita",
+  "price": 1.00,
+  "ingredients": ["TomatoSauce"]
+}
+
+### Customers can't move an order forward → 409 (only the admin prepares and delivers)
+PATCH {{baseUrl}}/orders/{{createOrder.response.body.$.id}}/status
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "status": "Preparing"
+}
+
+### An admin-only endpoint as a customer → 403
+GET {{baseUrl}}/users
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+
+
+### ─── 5. ADMIN ──────────────────────────────────────────────────────────
+# Every user's orders → 200
+GET {{baseUrl}}/orders
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+
+### Pending → Preparing → 200
+PATCH {{baseUrl}}/orders/{{createOrder.response.body.$.id}}/status
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "status": "Preparing"
+}
+
+### Preparing → Delivered → 200
+PATCH {{baseUrl}}/orders/{{createOrder.response.body.$.id}}/status
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "status": "Delivered"
+}
+
+### Delivered is final: cancelling it now → 409
+PATCH {{baseUrl}}/orders/{{createOrder.response.body.$.id}}/status
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "status": "Cancelled"
+}
+
+### Delete the order → 204 (admin only)
+DELETE {{baseUrl}}/orders/{{createOrder.response.body.$.id}}
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+
+### All users → 200
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+
+### One user → 200
+GET {{baseUrl}}/users/{{me.response.body.$.id}}
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+
+### A role that doesn't exist → 400 ("Role must be Admin or Customer.")
+PUT {{baseUrl}}/users/{{me.response.body.$.id}}/role
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "role": "Chef"
+}
+
+### Make ana an Admin → 200
+# Her current token still says Customer: a JWT is a snapshot, so the new role counts from her next login.
+PUT {{baseUrl}}/users/{{me.response.body.$.id}}/role
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "role": "Admin"
+}
+
+### Delete a user that doesn't exist → 404
+DELETE {{baseUrl}}/users/no-such-user
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+
+
+### ─── 6. BACK TO THE CUSTOMER: cancel, password, goodbye ───────────────
+# Place a second order → 201
+# @name orderToCancel
+POST {{baseUrl}}/orders
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "addressTo": "Main Street 10",
+  "pizzas": [
+    { "name": "Tuna", "price": 8.50, "ingredients": ["TomatoSauce", "Mozzarella", "Tuna", "Onion"] }
+  ]
+}
+
+### Cancel it → 200 (customers may cancel their own order while it's Pending)
+PATCH {{baseUrl}}/orders/{{orderToCancel.response.body.$.id}}/status
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "status": "Cancelled"
+}
+
+### Change my password → 204
+PUT {{baseUrl}}/users/me/password
+Authorization: Bearer {{customerLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Ana123!",
+  "newPassword": "Ana456!"
+}
+
+### Log in with the new password → 200, and now roles: ["Admin"]
+# @name newLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userName": "ana",
+  "password": "Ana456!"
+}
+
+### Delete my account → 204. Her pizzas and orders go with it, so the file can run again from the top.
+DELETE {{baseUrl}}/users/me
+Authorization: Bearer {{newLogin.response.body.$.token}}

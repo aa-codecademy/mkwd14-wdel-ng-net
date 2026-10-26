@@ -5,6 +5,7 @@ import { MatChipSet, MatChip } from '@angular/material/chips';
 import { NgOptimizedImage } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { HotPizza } from '../../../shared/directives/hot-pizza';
+import { IngredientNamePipe } from '../../../shared/pipes/ingredient-name-pipe';
 
 @Component({
   imports: [
@@ -17,7 +18,8 @@ import { HotPizza } from '../../../shared/directives/hot-pizza';
     NgOptimizedImage,
     MatCardActions,
     MatButton,
-    HotPizza
+    HotPizza,
+    IngredientNamePipe
   ],
   selector: 'app-pizza-card',
   styleUrl: './pizza-card.scss',

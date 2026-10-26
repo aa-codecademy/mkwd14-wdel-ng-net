@@ -14,7 +14,7 @@
         <p>{{ pizza().description }}</p>
         <mat-chip-set aria-label="Ingredients">
             @for (ingredient of pizza().ingredients; track ingredient) {
-            <mat-chip>{{ ingredient }}</mat-chip>
+            <mat-chip>{{ ingredient | ingredientName }}</mat-chip>
             }
         </mat-chip-set>
     </mat-card-content>
