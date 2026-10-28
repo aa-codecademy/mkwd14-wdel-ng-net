@@ -1,13 +1,9 @@
 import { computed, effect, Service, signal } from '@angular/core';
-import { Ingredient } from '../../shared/models/pizza-models';
+import { AddPizzaDto, Ingredient } from '../../shared/models/pizza-models';
 import { PizzaSize } from '../../shared/models/pizza-size';
 
-export interface CartItem {
+export interface CartItem extends AddPizzaDto {
     id: string;
-    name: string;
-    description?: string;
-    price: number;
-    ingredients: Ingredient[];
     size?: PizzaSize;
 }
 

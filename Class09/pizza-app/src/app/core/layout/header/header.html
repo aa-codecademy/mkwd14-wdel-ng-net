@@ -39,8 +39,7 @@
     </span>
     <button matButton type="button" (click)="logout()">Log out</button>
     } @else {
-    <button matButton type="button" (click)="loginAsAdmin()">
-        Log in as admin
-    </button>
+    <a matButton routerLink="/login" routerLinkActive="active">Log in</a>
+    <!-- Register -->
     }
 </mat-toolbar>

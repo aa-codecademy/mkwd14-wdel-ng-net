@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { computed, inject, Service, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { LoginRequestDto, LoginResponseDto } from '../../shared/models/auth-models';
@@ -22,6 +22,11 @@ export class AuthService {
     login(credentials: LoginRequestDto): Observable<LoginResponseDto> {
         return this.http
             .post<LoginResponseDto>(`${this.url}/login`, credentials)
+            // .post<LoginResponseDto>(`${this.url}/login`, credentials, {
+            //     headers: {
+            //         Authorization: `Bearer ${this.token()}`
+            //     }
+            // })
             .pipe(tap(user => this.saveUserSession(user)));
     }
 

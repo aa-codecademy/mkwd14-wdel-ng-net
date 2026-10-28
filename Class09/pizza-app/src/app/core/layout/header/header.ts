@@ -25,12 +25,6 @@ export class Header {
   protected readonly cartService = inject(CartService);
   protected readonly authService = inject(AuthService);
 
-  protected loginAsAdmin(): void {
-    this.authService
-      .login({ userName: 'admin', password: 'Admin123!' })
-      .subscribe(loggedInUser => console.log(loggedInUser));
-  }
-
   protected logout(): void {
     this.authService.logout();
   }
