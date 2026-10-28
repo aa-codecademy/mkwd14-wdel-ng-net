@@ -12,12 +12,26 @@
             [routerLinkActiveOptions]="{exact: true}">
             Menu
         </a>
+
+        @if (authService.isLoggedIn()) {
         <a
             matButton
             routerLink="/pizza-maker"
             routerLinkActive="active">
             Make a pizza
         </a>
+        <a
+            matButton
+            routerLink="/orders"
+            routerLinkActive="active">
+            My orders
+        </a>
+        }
+
+        @if (authService.isAdmin()) {
+        <!-- All orders -->
+        <!-- All users -->
+        }
     </nav>
 
     <span class="spacer"></span>

@@ -22,6 +22,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/checkout/checkout').then(m => m.Checkout)
     },
     {
+        path: 'orders',
+        title: 'My orders - Pizza App',
+        loadComponent: () => import('./features/orders/my-orders/my-orders').then((m) => m.MyOrders),
+    },
+    {
         path: '**',
         title: 'Page not found - Pizza App',
         loadComponent: () => import('./core/layout/not-found/not-found').then(m => m.NotFound)
