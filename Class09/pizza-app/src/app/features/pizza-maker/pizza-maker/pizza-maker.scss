@@ -1,0 +1,42 @@
+.maker {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    align-items: start;
+
+    @media (max-width: 800px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.summary {
+    position: sticky;
+    top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 16px;
+    background: var(--mat-sys-surface-container);
+}
+
+h2 {
+    margin: 0;
+    font: var(--mat-sys-title-medium);
+}
+
+// Three equal size buttons across the whole width
+.sizes mat-button-toggle {
+    flex: 1;
+}
+
+.price {
+    margin: 0;
+    font: var(--mat-sys-headline-small);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
