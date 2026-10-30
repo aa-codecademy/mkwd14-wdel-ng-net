@@ -1,0 +1,59 @@
+<mat-toolbar class="toolbar">
+    <a class="brand" routerLink="/">
+        <mat-icon>local_pizza</mat-icon>
+        Pizza App
+    </a>
+
+    <nav class="links">
+        <a
+            matButton
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}">
+            Menu
+        </a>
+
+        @if (authService.isLoggedIn()) {
+        <a
+            matButton
+            routerLink="/pizza-maker"
+            routerLinkActive="active">
+            Make a pizza
+        </a>
+        <a
+            matButton
+            routerLink="/orders"
+            routerLinkActive="active">
+            My orders
+        </a>
+        }
+
+        @if (authService.isAdmin()) {
+        <!-- All orders -->
+        <!-- All users -->
+        }
+    </nav>
+
+    <span class="spacer"></span>
+
+    <a
+        matIconButton
+        routerLink="/checkout"
+        aria-label="Cart"
+        [matBadge]="cartService.count()"
+        [matBadgeHidden]="cartService.count() === 0"
+        matBadgeDescription="pizzas in the cart">
+        <mat-icon>shopping_cart</mat-icon>
+    </a>
+
+    @if (authService.isLoggedIn()) {
+    <span class="user">
+        <mat-icon>person</mat-icon>
+        {{ authService.userName() }}
+    </span>
+    <button matButton type="button" (click)="logout()">Log out</button>
+    } @else {
+    <a matButton routerLink="/login" routerLinkActive="active">Log in</a>
+    <!-- Register -->
+    }
+</mat-toolbar>

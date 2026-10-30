@@ -1,0 +1,15 @@
+<h1>My orders</h1>
+
+@if (orderService.loading()) {
+<mat-spinner />
+}@else {
+<div class="orders">
+    @for (order of orderService.orders(); track order.id) {
+    <app-order-card [order]="order" />
+    }@empty {
+    <p>
+        No orders yet. <a routerLink="/pizza-maker">Make your first pizza</a>.
+    </p>
+    }
+</div>
+}

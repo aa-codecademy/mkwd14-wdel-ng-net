@@ -1,0 +1,13 @@
+<section class="hero">
+    <!-- priority: the logo is the first big image, so the browser loads it straight away -->
+    <img ngSrc="images/pizza-maker-logo.png" width="840" height="630" priority alt="Pizza Maker" />
+    <a matButton="filled" routerLink="/pizza-maker">Make your own pizza</a>
+</section>
+
+<h1>Not sure what to choose? Start from one of our favourites</h1>
+
+<div class="menu">
+    @for (pizza of menu; track $index) {
+    <app-pizza-card (choose)="makePizza($event)" [pizza]="pizza" />
+    }
+</div>

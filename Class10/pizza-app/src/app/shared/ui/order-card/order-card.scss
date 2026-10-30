@@ -1,0 +1,55 @@
+mat-card-header {
+    align-items: center;
+}
+
+// No buttons projected (e.g. a Cancelled order): no empty bar at the bottom
+mat-card-actions:empty {
+    display: none;
+}
+
+// One colour per status, picked with an attribute selector: [data-status="Pending"]
+.status {
+    margin-left: auto;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font: var(--mat-sys-label-large);
+    background: var(--mat-sys-surface-container-highest);
+
+    &[data-status='Pending'] {
+        background: var(--mat-sys-tertiary-container);
+        color: var(--mat-sys-on-tertiary-container);
+    }
+
+    &[data-status='Preparing'] {
+        background: var(--mat-sys-secondary-container);
+        color: var(--mat-sys-on-secondary-container);
+    }
+
+    &[data-status='Delivered'] {
+        background: var(--mat-sys-primary-container);
+        color: var(--mat-sys-on-primary-container);
+    }
+
+    &[data-status='Cancelled'] {
+        background: var(--mat-sys-error-container);
+        color: var(--mat-sys-on-error-container);
+    }
+}
+
+.pizzas {
+    padding: 0;
+    list-style: none;
+
+    li {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 4px 0;
+    }
+}
+
+.total {
+    margin-bottom: 16px;
+    text-align: right;
+    font: var(--mat-sys-title-medium);
+}
