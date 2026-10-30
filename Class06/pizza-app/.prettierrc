@@ -1,12 +1,14 @@
 {
   "printWidth": 100,
   "singleQuote": true,
-  "bracketSameLine": true,
   "overrides": [
     {
       "files": "*.html",
       "options": {
-        "parser": "angular"
+        "parser": "angular",
+        "tabWidth": 2,
+        "printWidth": 120,
+        "bracketSameLine": true
       }
     }
   ]

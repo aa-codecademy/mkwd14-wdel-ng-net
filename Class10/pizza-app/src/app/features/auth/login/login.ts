@@ -2,7 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { AuthService } from '../../../core/services/auth-service';
 import { Router } from '@angular/router';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { LoginRequestDto } from '../../../shared/models/auth-models';

@@ -2,7 +2,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth-service';
 import { inject } from '@angular/core';
 
-export const adminGuard: CanActivateFn = (route, state) => {
+export const adminGuard: CanActivateFn = () => {
   if (inject(AuthService).isAdmin()) {
     return true;
   }

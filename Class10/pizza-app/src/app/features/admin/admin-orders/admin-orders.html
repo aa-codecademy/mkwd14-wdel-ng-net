@@ -1,1 +1,28 @@
-<p>admin-orders works!</p>
+<h1>All orders</h1>
+
+@if (orderService.loading()) {
+  <mat-spinner />
+} @else {
+  <div class="orders">
+    @for (order of orderService.orders(); track order.id) {
+      <app-order-card [order]="order" [showUser]="true">
+        @switch (order.status) {
+          @case ('Pending') {
+            <button matButton="filled" type="button" (click)="orderService.changeStatus(order.id, 'Preparing')">
+              Start preparing
+            </button>
+            <button matButton type="button" (click)="orderService.changeStatus(order.id, 'Cancelled')">Cancel</button>
+          }
+          @case ('Preparing') {
+            <button matButton="filled" type="button" (click)="orderService.changeStatus(order.id, 'Delivered')">
+              Mark delivered
+            </button>
+            <button matButton type="button" (click)="orderService.changeStatus(order.id, 'Cancelled')">Cancel</button>
+          }
+        }
+      </app-order-card>
+    } @empty {
+      <p>No orders yet.</p>
+    }
+  </div>
+}

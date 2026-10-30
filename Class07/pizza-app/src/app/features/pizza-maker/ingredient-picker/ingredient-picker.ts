@@ -1,4 +1,4 @@
-import { Component, model, signal } from '@angular/core';
+import { Component, model } from '@angular/core';
 import { Ingredient, INGREDIENTS } from '../../../shared/models/pizza-models';
 import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 

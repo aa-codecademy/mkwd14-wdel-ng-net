@@ -40,15 +40,12 @@
     <p class="price">{{ price() | currency: 'EUR' }}</p>
 
     <div class="actions">
-      <button matButton="filled" type="button" [disabled]="!isValid()" (click)="addToCart()">
-        Add to cart
-      </button>
-      <button
-        matButton="outlined"
-        type="button"
-        [disabled]="!isValid()"
-        (click)="addAndMakeAnother()">
+      <button matButton="filled" type="button" [disabled]="!isValid()" (click)="addToCart()">Add to cart</button>
+      <button matButton="outlined" type="button" [disabled]="!isValid()" (click)="addAndMakeAnother()">
         Add and make another
+      </button>
+      <button matButton type="button" [disabled]="!isValid() || saving()" (click)="saveForLater()">
+        Save for later
       </button>
       <button matButton type="button" (click)="reset()">Start over</button>
     </div>

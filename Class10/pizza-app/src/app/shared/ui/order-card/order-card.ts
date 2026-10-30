@@ -17,4 +17,5 @@ import { IngredientNamePipe } from '../../pipes/ingredient-name-pipe';
 })
 export class OrderCard {
   readonly order = input.required<OrderDto>();
+  readonly showUser = input(false);
 }

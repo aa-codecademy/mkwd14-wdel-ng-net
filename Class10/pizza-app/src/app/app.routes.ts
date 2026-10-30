@@ -26,6 +26,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/checkout/checkout').then(m => m.Checkout)
     },
     {
+        path: 'my-pizzas',
+        title: 'My pizzas - Pizza App',
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/my-pizzas/my-pizzas/my-pizzas').then((m) => m.MyPizzas),
+    },
+    {
         path: 'orders',
         title: 'My orders - Pizza App',
         canActivate: [authGuard],

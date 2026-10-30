@@ -10,7 +10,6 @@ import { NotificationService } from '../../core/services/notification-service';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import as from '@angular/common/locales/as';
 import { AddPizzaDto } from '../../shared/models/pizza-models';
 import { AddOrderDto } from '../../shared/models/order-models';
 import { finalize } from 'rxjs';

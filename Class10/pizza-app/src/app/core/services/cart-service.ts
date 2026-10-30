@@ -1,5 +1,5 @@
 import { computed, effect, Service, signal } from '@angular/core';
-import { AddPizzaDto, Ingredient } from '../../shared/models/pizza-models';
+import { AddPizzaDto } from '../../shared/models/pizza-models';
 import { PizzaSize } from '../../shared/models/pizza-size';
 
 export interface CartItem extends AddPizzaDto {

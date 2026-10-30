@@ -1,7 +1,10 @@
 <h1>Your cart</h1>
 
 @if (cartService.count() === 0) {
-  <p>Your cart is empty. <a routerLink="/pizza-maker">Make a pizza</a>.</p>
+  <p>
+    Your cart is empty. <a routerLink="/pizza-maker">Make a pizza</a> or order one of
+    <a routerLink="/my-pizzas">your saved pizzas</a>.
+  </p>
 } @else {
   <ul class="cart">
     @for (item of cartService.items(); track item.id) {

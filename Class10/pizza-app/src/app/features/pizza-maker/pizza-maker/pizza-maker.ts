@@ -13,6 +13,9 @@ import { findMenuPizza } from '../../menu/menu-data';
 import { CartItem, CartService } from '../../../core/services/cart-service';
 import { HotPizza } from '../../../shared/directives/hot-pizza';
 import { IngredientNamePipe } from '../../../shared/pipes/ingredient-name-pipe';
+import { PizzaService } from '../../../core/services/pizza-service';
+import { NotificationService } from '../../../core/services/notification-service';
+import { finalize } from 'rxjs';
 
 const DEFAULT_NAME = 'Custom pizza';
 
@@ -39,6 +42,10 @@ export class PizzaMaker implements OnInit {
 
   readonly pizza = input<string>();
   private readonly cartService = inject(CartService);
+  private readonly pizzaService = inject(PizzaService);
+  private readonly notificationService = inject(NotificationService);
+
+  protected readonly saving = signal(false);
 
   protected readonly sizes = PIZZA_SIZES;
   protected readonly name = signal(DEFAULT_NAME);
@@ -83,6 +90,16 @@ export class PizzaMaker implements OnInit {
   protected addAndMakeAnother(): void {
     this.cartService.add(this.currentPizza());
     this.reset();
+  }
+
+  protected saveForLater(): void {
+    this.saving.set(true);
+    this.pizzaService
+      .create(this.currentPizza())
+      .pipe(finalize(() => this.saving.set(false)))
+      .subscribe((savedPizza) => {
+        this.notificationService.success(`${savedPizza.name} is saved in My pizzas.`);
+      })
   }
 
   private currentPizza(): Omit<CartItem, 'id'> {

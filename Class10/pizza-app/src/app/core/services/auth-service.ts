@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { computed, inject, Service, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { LoginRequestDto, LoginResponseDto } from '../../shared/models/auth-models';

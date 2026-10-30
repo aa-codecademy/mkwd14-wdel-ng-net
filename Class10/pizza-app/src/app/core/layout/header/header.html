@@ -5,16 +5,11 @@
   </a>
 
   <nav class="links">
-    <a
-      matButton
-      routerLink="/"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }">
-      Menu
-    </a>
+    <a matButton routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"> Menu </a>
 
     @if (authService.isLoggedIn()) {
       <a matButton routerLink="/pizza-maker" routerLinkActive="active"> Make a pizza </a>
+      <a matButton routerLink="/my-pizzas" routerLinkActive="active"> My pizzas </a>
       <a matButton routerLink="/orders" routerLinkActive="active"> My orders </a>
     }
 

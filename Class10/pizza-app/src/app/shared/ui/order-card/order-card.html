@@ -1,7 +1,12 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title>Order #{{ order().id }}</mat-card-title>
-    <mat-card-subtitle>{{ order().createdDate | date: 'd MMM y, HH:mm' }}</mat-card-subtitle>
+    <mat-card-subtitle>
+      {{ order().createdDate | date: 'd MMM y, HH:mm' }}
+      @if (showUser()) {
+        - {{ order().userName }}
+      }
+    </mat-card-subtitle>
     <span class="status" [attr.data-status]="order().status">{{ order().status }}</span>
   </mat-card-header>
 

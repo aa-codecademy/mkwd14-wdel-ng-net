@@ -1,0 +1,34 @@
+<h1>My pizzas</h1>
+
+@if (pizzaService.loading()) {
+  <mat-spinner />
+} @else {
+  <div class="pizzas">
+    @for (pizza of pizzaService.pizzas(); track pizza.id) {
+      <mat-card>
+        <mat-card-header [appHotPizza]="pizza.ingredients">
+          <mat-card-title>{{ pizza.name }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ pizza.description }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p>
+            {{ pizza.ingredients | ingredientName }}
+          </p>
+          <p class="price">
+            {{ pizza.price | currency: 'EUR' }}
+          </p>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button (click)="pizzaService.delete(pizza.id)" matButton type="button">Delete</button>
+          <button (click)="addToCart(pizza)" matButton type="button">Add to cart</button>
+        </mat-card-actions>
+      </mat-card>
+    } @empty {
+      <p>No saved pizzas yet. In the <a routerLink="/pizza-maker">pizza maker</a>, use "Save for later".</p>
+    }
+  </div>
+}

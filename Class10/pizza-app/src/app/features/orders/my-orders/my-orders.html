@@ -7,10 +7,7 @@
     @for (order of orderService.orders(); track order.id) {
       <app-order-card [order]="order">
         @if (order.status === 'Pending') {
-          <button
-            (click)="orderService.changeStatus(order.id, 'Cancelled')"
-            type="button"
-            matButton>
+          <button (click)="orderService.changeStatus(order.id, 'Cancelled')" type="button" matButton>
             Cancel order
           </button>
         }
