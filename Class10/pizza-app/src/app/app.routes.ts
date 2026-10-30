@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth-guard';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
     {
@@ -14,17 +16,41 @@ export const routes: Routes = [
     {
         path: 'pizza-maker',
         title: 'Make a pizza - Pizza App',
+        canActivate: [authGuard],
         loadComponent: () => import('./features/pizza-maker/pizza-maker/pizza-maker').then(m => m.PizzaMaker)
     },
     {
         path: 'checkout',
         title: 'Cart - Pizza App',
+        canActivate: [authGuard],
         loadComponent: () => import('./features/checkout/checkout').then(m => m.Checkout)
     },
     {
         path: 'orders',
         title: 'My orders - Pizza App',
+        canActivate: [authGuard],
         loadComponent: () => import('./features/orders/my-orders/my-orders').then((m) => m.MyOrders),
+    },
+    {
+        path: 'admin',
+        canActivate: [authGuard, adminGuard],
+        children: [
+            {
+                path: '',
+                redirectTo: 'orders',
+                pathMatch: 'full'
+            },
+            {
+                path: 'orders',
+                title: 'All orders - Pizza App',
+                loadComponent: () => import('./features/admin/admin-orders/admin-orders').then(m => m.AdminOrders)
+            },
+            {
+                path: 'users',
+                title: 'Users - Pizza App',
+                loadComponent: () => import('./features/admin/admin-users/admin-users').then(m => m.AdminUsers)
+            }
+        ]
     },
     {
         path: '**',

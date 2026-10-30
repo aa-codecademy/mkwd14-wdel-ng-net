@@ -3,7 +3,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule, MatIconButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CartService } from '../../services/cart-service';
 import { AuthService } from '../../services/auth-service';
 
@@ -24,8 +24,11 @@ import { AuthService } from '../../services/auth-service';
 export class Header {
   protected readonly cartService = inject(CartService);
   protected readonly authService = inject(AuthService);
+  protected readonly router = inject(Router);
 
   protected logout(): void {
     this.authService.logout();
+    this.cartService.clear();
+    this.router.navigate(['/']);
   }
 }

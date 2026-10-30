@@ -5,7 +5,13 @@
 }@else {
 <div class="orders">
     @for (order of orderService.orders(); track order.id) {
-    <app-order-card [order]="order" />
+    <app-order-card [order]="order">
+        @if(order.status === 'Pending') {
+        <button (click)="orderService.changeStatus(order.id, 'Cancelled')" type="button" matButton>
+            Cancel order
+        </button>
+        }
+    </app-order-card>
     }@empty {
     <p>
         No orders yet. <a routerLink="/pizza-maker">Make your first pizza</a>.

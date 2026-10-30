@@ -29,9 +29,10 @@
         }
 
         @if (authService.isAdmin()) {
-        <!-- All orders -->
-        <!-- All users -->
+        <a matButton routerLink="/admin/orders" routerLinkActive="active">All orders</a>
+        <a matButton routerLink="/admin/users" routerLinkActive="active">Users</a>
         }
+
     </nav>
 
     <span class="spacer"></span>

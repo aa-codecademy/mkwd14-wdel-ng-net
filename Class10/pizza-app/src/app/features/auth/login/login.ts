@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { AuthService } from '../../../core/services/auth-service';
 import { Router } from '@angular/router';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -22,6 +22,7 @@ export class Login {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly formBuilder = inject(NonNullableFormBuilder);
+  readonly returnUrl = input<string>();
 
   protected readonly loginForm = this.formBuilder.group({
     userName: ['', Validators.required],
@@ -29,7 +30,6 @@ export class Login {
   });
 
   protected onSubmit(): void {
-    debugger;
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -41,6 +41,6 @@ export class Login {
 
     this.authService
       .login(loginRequest)
-      .subscribe(() => this.router.navigate(['/']));
+      .subscribe(() => this.router.navigateByUrl(this.returnUrl() || '/'));
   }
 }

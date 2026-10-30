@@ -3,12 +3,14 @@ import { OrderService } from '../../../core/services/order-service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { OrderCard } from '../../../shared/ui/order-card/order-card';
+import { MatAnchor } from '@angular/material/button';
 
 @Component({
   imports: [
     RouterLink,
     MatProgressSpinnerModule,
-    OrderCard
+    OrderCard,
+    MatAnchor
   ],
   selector: 'app-my-orders',
   styleUrl: './my-orders.scss',

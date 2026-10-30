@@ -24,4 +24,9 @@
 
         <p class="total">Total: {{ order().totalPrice | currency: 'EUR' }}</p>
     </mat-card-content>
+
+    <mat-card-actions align="end">
+        <ng-content />
+        <br />
+    </mat-card-actions>
 </mat-card>
