@@ -1,60 +1,49 @@
 <mat-toolbar class="toolbar">
-    <a class="brand" routerLink="/">
-        <mat-icon>local_pizza</mat-icon>
-        Pizza App
-    </a>
+  <a class="brand" routerLink="/">
+    <mat-icon>local_pizza</mat-icon>
+    Pizza App
+  </a>
 
-    <nav class="links">
-        <a
-            matButton
-            routerLink="/"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact: true}">
-            Menu
-        </a>
-
-        @if (authService.isLoggedIn()) {
-        <a
-            matButton
-            routerLink="/pizza-maker"
-            routerLinkActive="active">
-            Make a pizza
-        </a>
-        <a
-            matButton
-            routerLink="/orders"
-            routerLinkActive="active">
-            My orders
-        </a>
-        }
-
-        @if (authService.isAdmin()) {
-        <a matButton routerLink="/admin/orders" routerLinkActive="active">All orders</a>
-        <a matButton routerLink="/admin/users" routerLinkActive="active">Users</a>
-        }
-
-    </nav>
-
-    <span class="spacer"></span>
-
+  <nav class="links">
     <a
-        matIconButton
-        routerLink="/checkout"
-        aria-label="Cart"
-        [matBadge]="cartService.count()"
-        [matBadgeHidden]="cartService.count() === 0"
-        matBadgeDescription="pizzas in the cart">
-        <mat-icon>shopping_cart</mat-icon>
+      matButton
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      Menu
     </a>
 
     @if (authService.isLoggedIn()) {
+      <a matButton routerLink="/pizza-maker" routerLinkActive="active"> Make a pizza </a>
+      <a matButton routerLink="/orders" routerLinkActive="active"> My orders </a>
+    }
+
+    @if (authService.isAdmin()) {
+      <a matButton routerLink="/admin/orders" routerLinkActive="active">All orders</a>
+      <a matButton routerLink="/admin/users" routerLinkActive="active">Users</a>
+    }
+  </nav>
+
+  <span class="spacer"></span>
+
+  <a
+    matIconButton
+    routerLink="/checkout"
+    aria-label="Cart"
+    [matBadge]="cartService.count()"
+    [matBadgeHidden]="cartService.count() === 0"
+    matBadgeDescription="pizzas in the cart">
+    <mat-icon>shopping_cart</mat-icon>
+  </a>
+
+  @if (authService.isLoggedIn()) {
     <span class="user">
-        <mat-icon>person</mat-icon>
-        {{ authService.userName() }}
+      <mat-icon>person</mat-icon>
+      {{ authService.userName() }}
     </span>
     <button matButton type="button" (click)="logout()">Log out</button>
-    } @else {
+  } @else {
     <a matButton routerLink="/login" routerLinkActive="active">Log in</a>
     <!-- Register -->
-    }
+  }
 </mat-toolbar>

@@ -1,65 +1,58 @@
 <h1>Your cart</h1>
 
 @if (cartService.count() === 0) {
-<p>Your cart is empty. <a routerLink="/pizza-maker">Make a pizza</a>.</p>
+  <p>Your cart is empty. <a routerLink="/pizza-maker">Make a pizza</a>.</p>
 } @else {
-<ul class="cart">
+  <ul class="cart">
     @for (item of cartService.items(); track item.id) {
-    <li>
+      <li>
         <div>
-            <strong>{{ item.name | uppercase }}</strong>
-            @if (item.size) {
+          <strong>{{ item.name | uppercase }}</strong>
+          @if (item.size) {
             <span class="size">{{ item.size }}</span>
-            }
-            <div class="ingredients">{{ item.ingredients | ingredientName }}</div>
+          }
+          <div class="ingredients">{{ item.ingredients | ingredientName }}</div>
         </div>
         <span class="price">{{ item.price | currency: 'EUR' }}</span>
         <button
-            matIconButton
-            type="button"
-            [attr.aria-label]="'Remove ' + item.name"
-            (click)="cartService.remove(item.id)">
-            <mat-icon>delete</mat-icon>
+          matIconButton
+          type="button"
+          [attr.aria-label]="'Remove ' + item.name"
+          (click)="cartService.remove(item.id)">
+          <mat-icon>delete</mat-icon>
         </button>
-    </li>
+      </li>
     }
-</ul>
+  </ul>
 
-<div class="total">
+  <div class="total">
     <button matButton type="button" (click)="cartService.clear()">Empty cart</button>
-    <span>Total: <strong>{{ cartService.total() | currency: 'EUR' }}</strong></span>
-</div>
+    <span
+      >Total: <strong>{{ cartService.total() | currency: 'EUR' }}</strong></span
+    >
+  </div>
 
-<h2>Delivery</h2>
-<form [formGroup]="checkoutForm" class="form" (ngSubmit)="placeOrder()">
+  <h2>Delivery</h2>
+  <form [formGroup]="checkoutForm" class="form" (ngSubmit)="placeOrder()">
     <mat-form-field>
-        <mat-label>Address</mat-label>
-        <input matInput formControlName="addressTo" type="text" autocomplete="street-address">
-        @if (checkoutForm.controls.addressTo.hasError('required')) {
-        <mat-error>
-            The address is required.
-        </mat-error>
-        }
-        @if (checkoutForm.controls.addressTo.hasError('maxlength')) {
-        <mat-error>
-            The address can be at most 200 characters.
-        </mat-error>
-        }
+      <mat-label>Address</mat-label>
+      <input matInput formControlName="addressTo" type="text" autocomplete="street-address" />
+      @if (checkoutForm.controls.addressTo.hasError('required')) {
+        <mat-error> The address is required. </mat-error>
+      }
+      @if (checkoutForm.controls.addressTo.hasError('maxlength')) {
+        <mat-error> The address can be at most 200 characters. </mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field>
-        <mat-label>Note for the driver (optional)</mat-label>
-        <textarea matInput formControlName="description" rows="2"></textarea>
-        @if (checkoutForm.controls.description.hasError('maxlength')) {
-        <mat-error>
-            The note can be at most 500 characters.
-        </mat-error>
-        }
+      <mat-label>Note for the driver (optional)</mat-label>
+      <textarea matInput formControlName="description" rows="2"></textarea>
+      @if (checkoutForm.controls.description.hasError('maxlength')) {
+        <mat-error> The note can be at most 500 characters. </mat-error>
+      }
     </mat-form-field>
 
-    <button [disabled]="placing()" matButton="filled" type="submit">
-        Place order
-    </button>
-</form>
-
+    <button [disabled]="placing()" matButton="filled" type="submit">Place order</button>
+  </form>
 }

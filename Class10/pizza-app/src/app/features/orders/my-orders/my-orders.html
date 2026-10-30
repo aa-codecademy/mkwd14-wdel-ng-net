@@ -1,21 +1,22 @@
 <h1>My orders</h1>
 
 @if (orderService.loading()) {
-<mat-spinner />
-}@else {
-<div class="orders">
+  <mat-spinner />
+} @else {
+  <div class="orders">
     @for (order of orderService.orders(); track order.id) {
-    <app-order-card [order]="order">
-        @if(order.status === 'Pending') {
-        <button (click)="orderService.changeStatus(order.id, 'Cancelled')" type="button" matButton>
+      <app-order-card [order]="order">
+        @if (order.status === 'Pending') {
+          <button
+            (click)="orderService.changeStatus(order.id, 'Cancelled')"
+            type="button"
+            matButton>
             Cancel order
-        </button>
+          </button>
         }
-    </app-order-card>
-    }@empty {
-    <p>
-        No orders yet. <a routerLink="/pizza-maker">Make your first pizza</a>.
-    </p>
+      </app-order-card>
+    } @empty {
+      <p>No orders yet. <a routerLink="/pizza-maker">Make your first pizza</a>.</p>
     }
-</div>
+  </div>
 }

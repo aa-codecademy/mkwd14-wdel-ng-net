@@ -1,32 +1,32 @@
 <mat-card>
-    <mat-card-header>
-        <mat-card-title>Order #{{ order().id }}</mat-card-title>
-        <mat-card-subtitle>{{ order().createdDate | date: 'd MMM y, HH:mm' }}</mat-card-subtitle>
-        <span class="status" [attr.data-status]="order().status">{{ order().status }}</span>
-    </mat-card-header>
+  <mat-card-header>
+    <mat-card-title>Order #{{ order().id }}</mat-card-title>
+    <mat-card-subtitle>{{ order().createdDate | date: 'd MMM y, HH:mm' }}</mat-card-subtitle>
+    <span class="status" [attr.data-status]="order().status">{{ order().status }}</span>
+  </mat-card-header>
 
-    <mat-card-content>
-        <p><strong>Deliver to:</strong> {{ order().addressTo }}</p>
-        @if (order().description) {
-        <p><strong>Note:</strong> {{ order().description }}</p>
-        }
+  <mat-card-content>
+    <p><strong>Deliver to:</strong> {{ order().addressTo }}</p>
+    @if (order().description) {
+      <p><strong>Note:</strong> {{ order().description }}</p>
+    }
 
-        <ul class="pizzas">
-            @for (pizza of order().pizzas; track pizza.id) {
-            <li>
-                <span>
-                    <strong>{{ pizza.name }}</strong> · {{ pizza.ingredients | ingredientName }}
-                </span>
-                <span>{{ pizza.price | currency: 'EUR' }}</span>
-            </li>
-            }
-        </ul>
+    <ul class="pizzas">
+      @for (pizza of order().pizzas; track pizza.id) {
+        <li>
+          <span>
+            <strong>{{ pizza.name }}</strong> · {{ pizza.ingredients | ingredientName }}
+          </span>
+          <span>{{ pizza.price | currency: 'EUR' }}</span>
+        </li>
+      }
+    </ul>
 
-        <p class="total">Total: {{ order().totalPrice | currency: 'EUR' }}</p>
-    </mat-card-content>
+    <p class="total">Total: {{ order().totalPrice | currency: 'EUR' }}</p>
+  </mat-card-content>
 
-    <mat-card-actions align="end">
-        <ng-content />
-        <br />
-    </mat-card-actions>
+  <mat-card-actions align="end">
+    <ng-content />
+    <br />
+  </mat-card-actions>
 </mat-card>
